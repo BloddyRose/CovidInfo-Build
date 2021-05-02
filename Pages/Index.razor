@@ -1,0 +1,136 @@
+﻿@page "/"
+
+<!DOCTYPE html>
+<!-- This site was created in Webflow. http://www.webflow.com -->
+<!-- Last Published: Sat May 01 2021 14:51:47 GMT+0000 (Coordinated Universal Time) -->
+<html data-wf-domain="bloddys-covid-info.webflow.io" data-wf-page="608d62a11024a2458fa43632"
+    data-wf-site="608d62a11024a2963ba43631" data-wf-status="1">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Bloddy&#x27;s Covid Info</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Webflow" name="generator" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="stylesheet" href="css/nav.css" type="text/css" />
+
+
+</head>
+
+<body class="body">
+    <header id="nav" class="sticky-nav">
+ <div class="topnav">
+   <a href="#home" class="active">Covid Info</a>
+   <!-- Navigation links (hidden by default) -->
+   <div id="myLinks">
+     <a href="">Github</a>
+     
+     <a href="https://github.com/BloddyRose" target="_blank">About</a>
+   </div>
+   <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+   <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+     <i class="fa fa-bars"></i>
+   </a>
+ </div> 
+    </header>
+    <div class="section sectiontext">
+        <h1 class="heading-2">Romania</h1>
+        <img src="images/RO-Romania-Flag-icon.png" loading="lazy" width="70" alt="" class="image" />
+    </div>
+    <div class="container w-container">
+        <div class="columns w-row">
+            <div class="column-2 w-col w-col-3">
+                <h1 class="heading-3">Date</h1>
+                <div>@date</div>
+            </div>
+            <div class="column-3 w-col w-col-3">
+                <h1 class="heading-4">Recoverd</h1>
+                <div>@recovered</div>
+            </div>
+            <div class="column-4 w-col w-col-3">
+                <h1 class="heading-5">Cases</h1>
+                <div>@cases</div>
+            </div>
+            <div class="column4 w-col w-col-3">
+                <h1 class="heading-6">Deaths</h1>
+                <div>@deaths</div>
+            </div>
+        </div>
+    </div>
+    <footer id="footer" class="footer">
+        <div class="w-container">
+            <div>Copyright © 2020 BloddyRose. All rights reserved.</div>
+        </div>
+    </footer>
+    <style>
+        .tip {
+            text-align: center;
+            text-decoration: underline;
+        }
+    </style>
+    <p class="tip">Tip : If the data was not loaded press a second time on the button or refresh the page!</p>
+</body>
+
+</html>
+
+@code
+{
+    private string date { get; set; }
+    private string recovered { get; set; }
+    private string cases { get; set; }
+    private string deaths { get; set; }
+
+
+
+protected async override Task OnInitializedAsync()
+    {
+        await RequestData();
+    }
+
+    private async Task RequestData()
+    {
+         try
+         {
+using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                HttpResponseMessage response = await client.GetAsync("https://www.trackcorona.live/api/countries/ro");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.Write("Success");
+                }
+                else
+                {
+                    Console.Write("Error" + response.StatusCode);
+
+                }
+                string r = await response.Content.ReadAsStringAsync();
+
+                DataSource data = DataSource.FromJson(r);
+
+                    foreach(var item in data.Data)
+                    {
+                        date = item.Updated.ToString("dddd, dd MMMM yyyy");
+                        recovered = item.Recovered .ToString("#,##0");
+                        cases = item.Confirmed.ToString("#,##0");
+                        deaths = item.Dead.ToString("#,##0");
+                    }
+
+            }
+        
+
+         }
+
+         catch(Exception e)
+         {
+             Console.WriteLine(e.Message);
+         }
+    }
+
+
+}

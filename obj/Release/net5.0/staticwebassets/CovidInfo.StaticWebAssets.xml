@@ -1,0 +1,4 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="/home/bloddyrose/Projects/CovidInfoStatic/CovidInfo/bin/Release/net5.0/wwwroot/" />
+  <ContentRoot BasePath="/" Path="/home/bloddyrose/Projects/CovidInfoStatic/CovidInfo/obj/Release/net5.0/scopedcss/bundle/" />
+</StaticWebAssets>
